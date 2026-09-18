@@ -1,0 +1,6 @@
+{
+  "name": "Old Money Traders",
+  "description": "App for buying and selling old coins and notes.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
