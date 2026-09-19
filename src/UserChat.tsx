@@ -180,12 +180,12 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
       });
       const data = await res.json();
       if (data.success && data.reply) {
-        await sendMessage({ text: data.reply, type: 'text', sender: 'bot' });
+        await sendMessage({ text: data.reply, type: 'text', sender: 'bot', model: data.model });
       } else {
-        await sendMessage({ text: t.agentGeneralReply(userText), type: 'text', sender: 'bot' });
+        await sendMessage({ text: t.agentGeneralReply(userText), type: 'text', sender: 'bot', model: 'Fallback Agent' });
       }
     } catch {
-      await sendMessage({ text: t.agentGeneralReply(userText), type: 'text', sender: 'bot' });
+      await sendMessage({ text: t.agentGeneralReply(userText), type: 'text', sender: 'bot', model: 'Offline Agent' });
     }
   };
 
@@ -299,19 +299,21 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
       });
       const data = await res.json();
       if (data.success && data.reply) {
-        await sendMessage({ text: data.reply, type: 'text', sender: 'bot' });
+        await sendMessage({ text: data.reply, type: 'text', sender: 'bot', model: data.model });
       } else {
         await sendMessage({ 
           text: t.agentSubmissionReply(currentSerial, currentPrice, currentEstimate), 
           type: 'text', 
-          sender: 'bot' 
+          sender: 'bot',
+          model: 'Fallback Agent'
         });
       }
     } catch {
       await sendMessage({ 
         text: t.agentSubmissionReply(currentSerial, currentPrice, currentEstimate), 
         type: 'text', 
-        sender: 'bot' 
+        sender: 'bot',
+        model: 'Offline Agent'
       });
     }
   };
@@ -524,7 +526,7 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
               <div className="max-w-[85%] bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 text-gray-900 rounded-2xl px-4 py-3 shadow-xs space-y-1">
                 <div className="flex items-center space-x-1.5 text-[11px] font-bold text-blue-700">
                   <Bot className="w-3.5 h-3.5" />
-                  <span>AI Agent ({currentLangObj.nativeName})</span>
+                  <span>{msg.model || 'AI Agent'} ({currentLangObj.nativeName})</span>
                 </div>
                 <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">{msg.text}</p>
                 <div className="text-[10px] mt-1 text-right text-gray-400">

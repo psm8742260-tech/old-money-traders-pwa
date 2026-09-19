@@ -239,19 +239,47 @@ async function startServer() {
     res.json({ success: true, message: msg });
   });
 
-  // Agent AI reply endpoint with multi-language instruction
+    // Agent AI reply endpoint with hybrid logic (DeepSeek first, Gemini fallback)
   app.post("/api/agent-reply", async (req, res) => {
     const { message, languageCode = 'te', languageName = 'Telugu', serialNumber, expectedPrice, estimatedValue } = req.body;
-    const ai = getGemini();
-
-    if (ai) {
-      try {
-        const prompt = `You are the expert evaluation agent of 'Coin Selling and Buying' platform. 
+    
+    const prompt = `You are the expert evaluation agent of 'Coin Selling and Buying' platform. 
 CRITICAL RULE: You MUST speak and respond ONLY in ${languageName} (${languageCode}). Do not use any other language.
 User's message / submission: "${message || ''}".
 Item details if provided: Serial Number: "${serialNumber || 'N/A'}", User Expected Price: "₹${expectedPrice || 'N/A'}", Estimated Market Value: "${estimatedValue || 'N/A'}".
 Provide a professional, courteous, and accurate reply in ${languageName} answering their query, validating their item, or guiding them on next steps for verification and payout. Keep your response within 2-4 sentences.`;
 
+    // 1. Attempt DeepSeek via PHRS Crowd Server
+    try {
+      const phrsResponse = await fetch("https://phrscrowd.online/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          key: "6606.0k",
+          message: prompt,
+          model: "deepseek"
+        }),
+        signal: AbortSignal.timeout(5000) // 5 seconds timeout
+      });
+
+      if (phrsResponse.ok) {
+        const data = await phrsResponse.json();
+        if (data.reply) {
+          return res.json({ 
+            success: true, 
+            reply: data.reply, 
+            model: "DeepSeek Model" 
+          });
+        }
+      }
+    } catch (err) {
+      console.log("DeepSeek (PHRS) unavailable, switching to Gemini...");
+    }
+
+    // 2. Fallback to Gemini
+    const ai = getGemini();
+    if (ai) {
+      try {
         const response = await ai.models.generateContent({
           model: 'gemini-flash-latest',
           contents: prompt
@@ -259,15 +287,24 @@ Provide a professional, courteous, and accurate reply in ${languageName} answeri
 
         const replyText = response.text?.trim();
         if (replyText) {
-          return res.json({ success: true, reply: replyText });
+          return res.json({ 
+            success: true, 
+            reply: replyText, 
+            model: "Gemini Model" 
+          });
         }
       } catch (err) {
         console.error("Gemini API error:", err);
       }
     }
 
-    // Return fallback signal so client uses localized expert reply
-    res.json({ success: false, fallback: true });
+    // Fallback if both fail
+    res.json({ 
+      success: false, 
+      fallback: true, 
+      reply: "ప్రస్తుతం సర్వర్ అందుబాటులో లేదు. దయచేసి కాసేపటి తర్వాత ప్రయత్నించండి.",
+      model: "System Offline"
+    });
   });
 
   // Official Coin & Note Rates Master endpoints

@@ -12,6 +12,7 @@ export interface ChatMessage {
   estimatedValue?: string;
   transactionId?: string;
   status?: 'pending' | 'approved' | 'rejected';
+  model?: string;
   timestamp?: string;
 }
 
