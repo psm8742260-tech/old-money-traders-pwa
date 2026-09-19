@@ -253,12 +253,12 @@ export function AdminPanel({ onBackToChat, onLogout }: AdminPanelProps) {
             </button>
           )}
           <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1.5 bg-gray-800 p-1 rounded-lg border border-gray-700">
-              <div className="w-6 h-6 rounded-full overflow-hidden border border-amber-400 flex-shrink-0" title="పాత 1 రూపాయి కాయిన్">
-                <img src={coinImg} alt="Coin" className="w-full h-full object-cover" />
+            <div className="flex flex-col items-center space-y-1 p-1 rounded-lg">
+              <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0" title="పాత 1 రూపాయి కాయిన్">
+                <img src={coinImg} alt="Coin" className="w-full h-full object-cover scale-[1.5]" />
               </div>
-              <div className="w-9 h-6 rounded-md overflow-hidden border border-amber-400 flex-shrink-0" title="పాత ₹10 నోటు">
-                <img src={noteImg} alt="Note" className="w-full h-full object-cover" />
+              <div className="w-9 h-5 rounded-md overflow-hidden flex-shrink-0" title="పాత ₹10 నోటు">
+                <img src={noteImg} alt="Note" className="w-full h-full object-cover scale-[1.8]" />
               </div>
             </div>
             <h1 className="text-base font-bold text-white flex items-center space-x-2">
@@ -320,6 +320,8 @@ export function AdminPanel({ onBackToChat, onLogout }: AdminPanelProps) {
           <Users className="w-4 h-4" />
           <span>యూజర్ల రిజిస్ట్రేషన్ ట్యాబ్ ({allUserIds.length})</span>
         </button>
+
+        {/* Tab 4: యూజర్ల రిజిస్ట్రేషన్ ట్యాబ్ (Registered Users) */}
 
         {/* Tab 4: లైవ్ కస్టమర్ చాట్ ట్యాబ్ */}
         <button
@@ -391,11 +393,11 @@ export function AdminPanel({ onBackToChat, onLogout }: AdminPanelProps) {
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center space-x-3 flex-1">
                         {item.photoUrl ? (
-                          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 border">
-                            <img src={item.photoUrl} alt="Coin/Note" className="w-full h-full object-cover" />
+                          <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-0">
+                            <img src={item.photoUrl} alt="Coin/Note" className="w-full h-full object-cover scale-[1.4]" />
                           </div>
                         ) : (
-                          <div className="w-16 h-16 bg-gray-50 border rounded-lg flex items-center justify-center text-gray-400 text-[10px] flex-shrink-0">
+                          <div className="w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 text-[10px] flex-shrink-0">
                             No Photo
                           </div>
                         )}
@@ -424,12 +426,18 @@ export function AdminPanel({ onBackToChat, onLogout }: AdminPanelProps) {
                              <button className="p-1.5 bg-red-50 text-red-700 rounded hover:bg-red-100"><XCircle className="w-3 h-3" /></button>
                           </div>
                       </div>
-                    </div>
-                    {/* New Fields */}
-                    <div className="bg-gray-50 p-2 rounded-lg text-[10px] text-gray-700 space-y-0.5 border border-gray-100">
-                      <p><span className="font-bold">Aadhaar:</span> {item.aadhaarNumber || 'N/A'}</p>
-                      <p><span className="font-bold">Address:</span> {item.addressPostOffice || 'N/A'}, {item.addressRoad || 'N/A'}</p>
-                      <p><span className="font-bold">Delivery:</span> {item.deliveryOption || 'N/A'}</p>
+                      {/* New Fields for ID & Address */}
+                      <div className="bg-blue-50/50 p-2 rounded-lg text-[10px] text-gray-700 space-y-0.5 border border-blue-100 mt-1">
+                        <div className="grid grid-cols-2">
+                          <p><span className="font-bold">Aadhaar:</span> {item.aadhaarNumber || 'N/A'}</p>
+                          <p><span className="font-bold">Phone:</span> {item.phoneNumber || 'N/A'}</p>
+                        </div>
+                        <p><span className="font-bold">Address:</span> {item.addressRoad || 'N/A'}</p>
+                        <div className="grid grid-cols-2">
+                          <p><span className="font-bold">Year/Metal:</span> {item.date?.split('/')[2] || ''} / {item.name?.split('(')[0] || ''}</p>
+                          <p><span className="font-bold">Delivery:</span> {item.deliveryOption || 'N/A'}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -438,6 +446,41 @@ export function AdminPanel({ onBackToChat, onLogout }: AdminPanelProps) {
                   ఇప్పటివరకు ఎలాంటి అమ్మే వాళ్ళ వివరాలు సమర్పించబడలేదు.
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* 1.5 యూజర్ల రిజిస్ట్రేషన్ ట్యాబ్ (Users Tab View - Includes Buyers Data) */}
+        {activeTab === 'users' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-2 bg-white px-2.5 py-1 rounded-lg border border-gray-200 shadow-2xs">
+              <div className="flex items-center space-x-1.5 min-w-0">
+                <Users className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                <span className="text-[11px] font-bold text-gray-900 whitespace-nowrap">
+                  రిజిస్టర్డ్ యూజర్లు & కొనేవాళ్ళు
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Combine registered IDs and Buyer Transactions */}
+              {allUserIds.map(userId => {
+                const buyerData = transactions.find(t => t.userId === userId && t.type === 'buy');
+                return (
+                  <div key={userId} className="bg-white rounded-lg border border-gray-200 p-2 shadow-xs flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-bold text-gray-900">User ID: {userId}</p>
+                      {buyerData && <span className="bg-blue-100 text-blue-800 text-[9px] px-2 py-0.5 rounded font-bold">Buyer</span>}
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded-lg text-[10px] text-gray-700 space-y-1 border border-gray-100">
+                      <p><span className="font-bold">Aadhaar:</span> {buyerData?.aadhaarNumber || 'N/A'}</p>
+                      <p><span className="font-bold">Phone:</span> {buyerData?.phoneNumber || 'N/A'}</p>
+                      <p><span className="font-bold">Address:</span> {buyerData?.addressRoad || 'N/A'}</p>
+                      <p><span className="font-bold">Delivery:</span> {buyerData?.deliveryOption || 'N/A'}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

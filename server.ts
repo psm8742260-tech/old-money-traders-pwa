@@ -253,7 +253,7 @@ Item details if provided: Serial Number: "${serialNumber || 'N/A'}", User Expect
 Provide a professional, courteous, and accurate reply in ${languageName} answering their query, validating their item, or guiding them on next steps for verification and payout. Keep your response within 2-4 sentences.`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: 'gemini-flash-latest',
           contents: prompt
         });
 
@@ -315,7 +315,15 @@ Provide a professional, courteous, and accurate reply in ${languageName} answeri
   app.get("/api/transactions", (req, res) => { res.json(store.transactions); });
 
   app.post("/api/transactions", (req, res) => {
-    const tx = { id: Date.now().toString(), timestamp: new Date().toISOString(), ...req.body };
+    const tx = { 
+      id: Date.now().toString(), 
+      timestamp: new Date().toISOString(), 
+      ...req.body,
+      // Ensure specific fields are mapped if they come in different names
+      aadhaarNumber: req.body.aadhaarNumber || req.body.userAadhar,
+      addressRoad: req.body.addressRoad || req.body.userAddress,
+      phoneNumber: req.body.phoneNumber || req.body.userPhone
+    };
     store.transactions.push(tx);
     res.json({ success: true, transaction: tx });
   });
@@ -329,10 +337,14 @@ Provide a professional, courteous, and accurate reply in ${languageName} answeri
     }
   });
 
-  // Always serve from the compiled dist directory to force browser cache busting with hashed assets
-  const distPath = path.join(process.cwd(), 'dist');
-  app.use(express.static(distPath));
-  app.get('*', (req, res) => { res.sendFile(path.join(distPath, 'index.html')); });
+  if (process.env.NODE_ENV !== "production") {
+    const vite = await createViteServer({ server: { middlewareMode: true }, appType: "spa" });
+    app.use(vite.middlewares);
+  } else {
+    const distPath = path.join(process.cwd(), 'dist');
+    app.use(express.static(distPath));
+    app.get('*', (req, res) => { res.sendFile(path.join(distPath, 'index.html')); });
+  }
 
   app.listen(PORT, "0.0.0.0", () => { console.log(`Server running on port ${PORT}`); });
 }

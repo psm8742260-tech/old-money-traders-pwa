@@ -4,6 +4,8 @@ import { UserChat } from './UserChat';
 import { AdminPanel } from './AdminPanel';
 import { LanguageSelector } from './LanguageSelector';
 import { Language } from './types';
+import { PWAInstallButton } from './PWAInstallButton';
+import { OfflineIndicator } from './OfflineIndicator';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'login' | 'userChat' | 'admin'>('login');
@@ -28,6 +30,21 @@ export default function App() {
 
   return (
     <div className="relative font-sans text-gray-900 min-h-screen bg-gradient-to-br from-pink-100 via-rose-50 to-pink-100">
+      <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2">
+        <PWAInstallButton />
+        {currentView !== 'login' && (
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-1 rounded-full bg-purple-600 px-2.5 py-1 text-[9px] font-bold text-white shadow-lg shadow-purple-500/30 hover:bg-purple-700 transition-all active:scale-95 w-fit"
+          >
+            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            LOGOUT
+          </button>
+        )}
+      </div>
+      
       {currentView === 'login' && (
         <Login 
           onLogin={handleLogin} 
@@ -57,6 +74,8 @@ export default function App() {
           onLogout={handleLogout} 
         />
       )}
+
+      <OfflineIndicator />
     </div>
   );
 }

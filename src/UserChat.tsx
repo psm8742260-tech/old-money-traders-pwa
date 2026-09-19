@@ -67,6 +67,14 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
 
   // Coin Registration & Valuation Modal State
   const [showValuationModal, setShowValuationModal] = useState(false);
+  const [userType, setUserType] = useState<'seller' | 'buyer'>('seller');
+  const [coinYear, setCoinYear] = useState('');
+  const [coinMetal, setCoinMetal] = useState('');
+  const [userAadhar, setUserAadhar] = useState('');
+  const [userAddress, setUserAddress] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [userPinCode, setUserPinCode] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'COD' | 'Online'>('COD');
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [coinPhoto, setCoinPhoto] = useState<string>('');
   const [serialNumber, setSerialNumber] = useState<string>('');
@@ -248,14 +256,18 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
       body: JSON.stringify({ 
         userId, 
         status: 'pending', 
-        type: 'sell',
-        name: `User ${userId}`,
-        phoneNumber: userId,
+        type: userType === 'seller' ? 'sell' : 'buy',
+        name: `User ${userPhone.slice(-4) || userId.slice(-4)}`,
+        phoneNumber: userPhone,
+        aadhaarNumber: userAadhar,
+        addressRoad: userAddress,
+        deliveryOption: paymentMethod,
         date: new Date().toLocaleDateString(),
         serialNumber: currentSerial,
         expectedPrice: currentPrice,
         estimatedValue: currentEstimate,
-        photoUrl: currentPhoto
+        photoUrl: currentPhoto,
+        timestamp: new Date().toISOString()
       })
     });
 
@@ -361,12 +373,12 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
           
           {/* Branded Identity: Coin + Note + "Coin Selling and Buying" */}
           <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1 bg-gradient-to-br from-amber-50 to-amber-100/70 p-1 rounded-xl border border-amber-300 shadow-2xs">
-              <div className="w-8 h-8 rounded-full overflow-hidden border border-amber-400 shadow-2xs flex-shrink-0 bg-white" title="George V Coin">
-                <img src={coinImg} alt="Coin" className="w-full h-full object-cover" />
+            <div className="flex flex-col items-center space-y-1 p-1 rounded-xl">
+              <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0" title="George V Coin">
+                <img src={coinImg} alt="Coin" className="w-full h-full object-cover scale-[1.5]" />
               </div>
-              <div className="w-11 h-7 rounded-md overflow-hidden border border-amber-400 shadow-2xs flex-shrink-0 bg-white" title="RBI 10 Rupee Note">
-                <img src={noteImg} alt="10 Rupee Note" className="w-full h-full object-cover" />
+              <div className="w-11 h-6 rounded-md overflow-hidden flex-shrink-0" title="RBI 10 Rupee Note">
+                <img src={noteImg} alt="10 Rupee Note" className="w-full h-full object-cover scale-[1.8]" />
               </div>
             </div>
 
@@ -417,10 +429,11 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
         {/* New Coin Registration Button - Blue Board matching exact same size and height as Orange Board */}
         <button 
           onClick={() => setShowValuationModal(true)}
+          style={{ width: '130px' }}
           className="h-8 flex items-center justify-center space-x-1.5 py-1.5 px-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-[11px] font-bold shadow-2xs transition-transform active:scale-95 flex-shrink-0"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span className="whitespace-nowrap">{t.registerCoinNote}</span>
+          <Plus className="w-3.5 h-3.5 stroke-[2.5] flex-shrink-0" />
+          <span className="text-center leading-none truncate">{t.registerCoinNote}</span>
         </button>
       </div>
 
@@ -430,12 +443,12 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
         <div className="bg-gradient-to-r from-amber-50/70 via-blue-50/50 to-indigo-50/50 border border-amber-200/80 rounded-2xl p-3.5 space-y-2 shadow-2xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="flex items-center space-x-1 bg-white p-1 rounded-lg border border-amber-200 shadow-2xs">
-                <div className="w-6 h-6 rounded-full overflow-hidden border border-amber-400 flex-shrink-0">
-                  <img src={coinImg} alt="Coin" className="w-full h-full object-cover" />
+              <div className="flex flex-col items-center space-y-1 p-1 rounded-lg">
+                <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
+                  <img src={coinImg} alt="Coin" className="w-full h-full object-cover scale-[1.5]" />
                 </div>
-                <div className="w-9 h-6 rounded-md overflow-hidden border border-amber-400 flex-shrink-0">
-                  <img src={noteImg} alt="₹10 Note" className="w-full h-full object-cover" />
+                <div className="w-9 h-5 rounded-md overflow-hidden flex-shrink-0">
+                  <img src={noteImg} alt="₹10 Note" className="w-full h-full object-cover scale-[1.8]" />
                 </div>
               </div>
               <span className="text-xs font-bold text-gray-900">
@@ -651,16 +664,16 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
                 </button>
 
                 {/* 1. Top Round Coin inside white circular badge */}
-                <div className="w-24 h-24 rounded-full bg-white shadow-md flex items-center justify-center p-2 border border-rose-200/90 transition-transform hover:scale-105">
-                  <div className="w-full h-full rounded-full overflow-hidden border border-amber-300 shadow-inner bg-amber-50/40">
-                    <img src={coinImg} alt="George V Coin" className="w-full h-full object-cover" />
+                <div className="w-24 h-24 rounded-full flex items-center justify-center p-2 transition-transform hover:scale-105">
+                  <div className="w-full h-full rounded-full overflow-hidden">
+                    <img src={coinImg} alt="George V Coin" className="w-full h-full object-cover scale-[1.5]" />
                   </div>
                 </div>
-
+ 
                 {/* 2. Middle Vintage Note inside white rounded rectangular card */}
-                <div className="w-60 mt-3 bg-white rounded-2xl shadow-md p-2 border border-rose-200/90 flex items-center justify-center transition-transform hover:scale-105">
-                  <div className="w-full h-28 rounded-xl overflow-hidden border border-amber-300/80 shadow-2xs bg-amber-50/30">
-                    <img src={noteImg} alt="10 Rupee Note" className="w-full h-full object-cover" />
+                <div className="w-60 mt-3 rounded-2xl p-2 flex items-center justify-center transition-transform hover:scale-105">
+                  <div className="w-full h-28 rounded-xl overflow-hidden">
+                    <img src={noteImg} alt="10 Rupee Note" className="w-full h-full object-cover scale-[1.8]" />
                   </div>
                 </div>
 
@@ -838,12 +851,12 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
           <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center space-x-2">
-                <div className="flex items-center space-x-1 bg-amber-50 p-1 rounded-lg border border-amber-200">
-                  <div className="w-5 h-5 rounded-full overflow-hidden border border-amber-400 flex-shrink-0">
-                    <img src={coinImg} alt="Coin" className="w-full h-full object-cover" />
+                <div className="flex flex-col items-center space-y-1 p-1 rounded-lg">
+                  <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0">
+                    <img src={coinImg} alt="Coin" className="w-full h-full object-cover scale-[1.5]" />
                   </div>
-                  <div className="w-8 h-5 rounded-md overflow-hidden border border-amber-400 flex-shrink-0">
-                    <img src={noteImg} alt="₹10" className="w-full h-full object-cover" />
+                  <div className="w-8 h-4 rounded-md overflow-hidden flex-shrink-0">
+                    <img src={noteImg} alt="₹10" className="w-full h-full object-cover scale-[1.8]" />
                   </div>
                 </div>
                 <h3 className="font-bold text-gray-900 text-sm">
@@ -856,10 +869,26 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
             </div>
 
             <div className="space-y-3.5 text-sm">
+              {/* User Type Selection: Seller or Buyer */}
+              <div className="flex bg-gray-100 p-1 rounded-xl mb-2">
+                <button 
+                  onClick={() => setUserType('seller')}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${userType === 'seller' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500'}`}
+                >
+                  నేను అమ్మేవాడిని (Seller)
+                </button>
+                <button 
+                  onClick={() => setUserType('buyer')}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${userType === 'buyer' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500'}`}
+                >
+                  నేను కొనేవాడిని (Buyer)
+                </button>
+              </div>
+
               {/* Mobile Camera Option */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                  1. {t.modalStep1Photo}
+                  1. {userType === 'seller' ? 'కాయిన్/నోటు ఫోటో తీయండి' : 'మీ గుర్తింపు కార్డు ఫోటో (Optional)'}
                 </label>
                 <input 
                   type="file" 
@@ -884,12 +913,99 @@ export function UserChat({ userId, isAdmin, onOpenAdmin, onBack }: UserChatProps
                     <button 
                       onClick={() => setCoinPhoto('')}
                       className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 shadow"
-                      title={t.close}
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 )}
+              </div>
+
+              {/* Additional Fields for ID & Address */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-600 mb-0.5">ఆధార్ నంబర్</label>
+                  <input 
+                    type="text" 
+                    placeholder="12 అంకెలు"
+                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-500"
+                    value={userAadhar}
+                    onChange={e => setUserAadhar(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-600 mb-0.5">ఫోన్ నంబర్</label>
+                  <input 
+                    type="text" 
+                    placeholder="మొబైల్ నంబర్"
+                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-500"
+                    value={userPhone}
+                    onChange={e => setUserPhone(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {userType === 'seller' ? (
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-600 mb-0.5">కాయిన్ సంవత్సరం</label>
+                    <input 
+                      type="text" 
+                      placeholder="ఉదా: 1947"
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-500"
+                      value={coinYear}
+                      onChange={e => setCoinYear(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-600 mb-0.5">మెటల్ రకం</label>
+                    <select 
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-500"
+                      value={coinMetal}
+                      onChange={e => setCoinMetal(e.target.value)}
+                    >
+                      <option value="">ఎంచుకోండి</option>
+                      <option value="Silver">వెండి (Silver)</option>
+                      <option value="Copper">రాగి (Copper)</option>
+                      <option value="Gold">బంగారం (Gold)</option>
+                      <option value="Nickel">నికెల్ (Nickel)</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-600 mb-0.5">పిన్ కోడ్</label>
+                    <input 
+                      type="text" 
+                      placeholder="6 అంకెలు"
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-500"
+                      value={userPinCode}
+                      onChange={e => setUserPinCode(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-600 mb-0.5">డెలివరీ ఆప్షన్</label>
+                    <select 
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-500"
+                      value={paymentMethod}
+                      onChange={e => setPaymentMethod(e.target.value as any)}
+                    >
+                      <option value="COD">Cash On Delivery</option>
+                      <option value="Online">Online Payment</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-[10px] font-bold text-gray-600 mb-0.5">పూర్తి చిరునామా (Address)</label>
+                <textarea 
+                  placeholder="ఇంటి నంబర్, వీధి, గ్రామం, పోస్ట్ ఆఫీస్ వివరాలు..."
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-blue-500"
+                  rows={2}
+                  value={userAddress}
+                  onChange={e => setUserAddress(e.target.value)}
+                />
               </div>
 
               {/* Quick Select from Master Rate Chart */}

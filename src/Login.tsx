@@ -92,21 +92,21 @@ export function Login({ onLogin, onOpenMessages }: LoginProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-rose-50 to-pink-100 flex flex-col items-center justify-center p-4">
-      {/* Coin Image - Ensure exact fit to circle */}
-      <div className="w-32 h-32 mb-4 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-200">
+      {/* Coin Image - No background/border, Image fits container exactly */}
+      <div className="w-32 h-32 mb-4 rounded-full overflow-hidden flex items-center justify-center">
         <img 
           src={coinImg} 
           alt="Old 1 Rupee Coin" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-[1.5]"
         />
       </div>
 
-      {/* Note Image - Ensure exact fit to rectangular box */}
-      <div className="w-48 h-auto mb-6 rounded-md overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-200">
+      {/* Note Image - No background/border, Further zoomed and slimmed to hide image background */}
+      <div className="w-48 h-26 mb-6 rounded-sm overflow-hidden flex items-center justify-center">
          <img 
           src={noteImg} 
           alt="Old 10 Rupee Note" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-[1.8]"
         />
       </div>
 

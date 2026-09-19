@@ -9,6 +9,30 @@
 const PHRS_GATEWAY = "https://phrscrowd.online";
 const PROJECT_KEY = "6606.0k"; // Default API key/authorization
 
+// ⚡ Automatic SDK Ping / Instant Registration Telemetry
+(async function initProjectTelemetry() {
+  try {
+    const origin = typeof window !== "undefined" ? window.location.origin : "vps-node-service";
+    const appTitle = typeof document !== "undefined" ? document.title : "PHRS Client Node";
+    await fetch(`${PHRS_GATEWAY}/api/projects`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${PROJECT_KEY}`
+      },
+      body: JSON.stringify({ 
+        id: `sdk-${Math.floor(1000 + Math.random() * 9000)}`,
+        name: appTitle || "External Node",
+        status: "ACTIVE" 
+      })
+    });
+  } catch (e) { /* Silent fail-safe */ }
+})();
+
+/**
+ * 📲 ఫోన్ నంబర్కు OTP కోడ్ పంపడానికి
+ * @param {string} phoneNumber 
+ */
 export async function sendOTP(phoneNumber: string) {
   try {
     const response = await fetch(`${PHRS_GATEWAY}/api/otp/send`, {
@@ -23,11 +47,6 @@ export async function sendOTP(phoneNumber: string) {
         otp: Math.floor(100000 + Math.random() * 900000).toString() 
       })
     });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-    
     return await response.json();
   } catch (err: any) {
     console.error("SMS Send Error:", err);
@@ -35,6 +54,11 @@ export async function sendOTP(phoneNumber: string) {
   }
 }
 
+/**
+ * 🔑 పంపిన OTP కోడ్ సరిచూసుకోవడానికి (Verify)
+ * @param {string} phoneNumber 
+ * @param {string} otpCode 
+ */
 export async function verifyOTP(phoneNumber: string, otpCode: string) {
   try {
     const response = await fetch(`${PHRS_GATEWAY}/api/sms/verify-otp`, {
@@ -46,11 +70,6 @@ export async function verifyOTP(phoneNumber: string, otpCode: string) {
       // మన బ్యాకెండ్ ఇప్పుడు { phone, otp } అని అడుగుతోంది 
       body: JSON.stringify({ phone: phoneNumber, otp: otpCode })
     });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-
     return await response.json();
   } catch (err: any) {
     console.error("OTP Verify Error:", err);
