@@ -4,6 +4,23 @@
 
 ---
 
+## [PWABuilder Manifest & Icon Resolution + Visual Identity Alignment] - 2026-09-22 11:45 IST
+- **సవరించిన ఫైల్స్ & లైన్ నంబర్లు**:
+  1. `public/manifest.webmanifest`: (లైన్లు 1-32) - కొత్తగా సృష్టించబడింది; ఖచ్చితమైన `application/manifest+json` స్పెక్స్, `/icon-192.png`, `/icon-512.png`, `/icon-maskable-512.png` లింక్ చేయబడ్డాయి.
+  2. `public/manifest.json`: (లైన్లు 1-32) - PWABuilder మరియు బ్రౌజర్ల కోసం స్టాటిక్ మేనిఫెస్ట్ సృష్టించబడింది.
+  3. `public/icon-192.png`: JFIF JPEG నుండి స్వచ్ఛమైన 192x192 8-bit RGBA PNG ఫార్మాట్‌లోకి మార్చబడింది (ImageMagick కన్వర్షన్).
+  4. `public/icon-512.png`: 512x512 8-bit RGBA PNG ఫార్మాట్‌లోకి మార్చబడింది.
+  5. `public/icon-maskable-512.png`: 512x512 సేఫ్-జోన్ మాస్కబుల్ PNG గా సృష్టించబడింది.
+  6. `public/brand-banner.png`: స్క్రీన్‌షాట్ 1 లోని పూర్తి రూపం (జార్జ్ V కాయిన్ + ₹10 నోటు + "Coin Selling and Buying" హెడ్డింగ్) తో హై-రిజల్యూషన్ బ్యానర్ సిద్ధం చేయబడింది.
+  7. `vite.config.ts`: (లైన్లు 19-45) - ఐకాన్ పాత్‌లను అబ్సొల్యూట్ పాత్స్ (`/icon-192.png`, `/icon-512.png`, `/icon-maskable-512.png`) గా మరియు యాప్ టైటిల్‌ను సింక్ చేశాను.
+  8. `index.html`: (లైన్లు 16-19) - `<link rel="manifest" href="/manifest.webmanifest" />` మరియు 192x192, 512x512 ఐకాన్ లింకులు చేర్చబడ్డాయి.
+  9. `server.ts`: (లైన్లు 234-252) - `/manifest.webmanifest`, `/manifest.json`, `/icon-*.png` కోసం ఎక్స్‌ప్రెస్ హెడర్స్ (`application/manifest+json`, `image/png`) డెడికేటెడ్ రౌట్లు యాడ్ చేయబడ్డాయి.
+  10. `src/Login.tsx`: (లైన్లు 94-118) - స్క్రీన్‌షాట్ 1 కి అనుగుణంగా జార్జ్ V కాయిన్, ₹10 నోటు పూర్తి అంచులు (కత్తిరింపులు లేకుండా), మరియు "Coin Selling and Buying" టైటిల్ లేఅవుట్ పిన్‌పాయింట్ పద్ధతిలో అమర్చబడ్డాయి.
+  11. `RESTART_TRACKER.md`: (లైన్లు 1-35) - అడ్మిన్ ఆదేశాల ప్రకారం రీస్టార్ట్ కోడ్స్ మరియు వెర్షన్ ఆడిట్ లాగ్ రికార్డు సృష్టించబడింది.
+- **స్థితి**: PWABuilder యాక్షన్ ఐటెమ్స్ (192 PNG, icon types, 512 PNG) 100% పరిష్కరించబడ్డాయి; స్క్రీన్‌షాట్ 1 విజువల్స్ పక్కాగా అమర్చబడ్డాయి.
+
+---
+
 ## [Hybrid AI Model Integration] - 2026-09-18 22:59 IST
 - **సవరించిన ఫైల్స్**: `server.ts`, `src/UserChat.tsx`, `src/types.ts`, `CHANGELOG.md`
 - **మార్పులు**:

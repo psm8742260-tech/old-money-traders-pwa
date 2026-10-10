@@ -16,8 +16,8 @@ export default defineConfig(() => {
         },
         manifest: {
           id: '/',
-          name: 'Old Money Traders',
-          short_name: 'Old Money',
+          name: 'Old Money Traders - Coin Selling and Buying',
+          short_name: 'Coin & Notes',
           description: 'Buying and selling old coins and notes',
           theme_color: '#fdf2f2',
           background_color: '#fdf2f2',
@@ -26,19 +26,19 @@ export default defineConfig(() => {
           scope: '/',
           icons: [
             {
-              src: 'icon-192.png',
+              src: '/icon-192.png',
               sizes: '192x192',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: 'icon-512.png',
+              src: '/icon-512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: 'icon-maskable-512.png',
+              src: '/icon-maskable-512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',

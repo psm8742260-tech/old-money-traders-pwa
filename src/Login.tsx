@@ -91,26 +91,26 @@ export function Login({ onLogin, onOpenMessages }: LoginProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-rose-50 to-pink-100 flex flex-col items-center justify-center p-4">
-      {/* Coin Image - No background/border, Image fits container exactly */}
-      <div className="w-32 h-32 mb-4 rounded-full overflow-hidden flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-[#fff5f6] via-[#fdf0f2] to-[#fae8eb] flex flex-col items-center justify-center p-4 sm:p-6">
+      {/* Coin Image - King George V Silver Coin from Screenshot */}
+      <div className="w-36 h-36 mb-4 rounded-full overflow-hidden flex items-center justify-center shadow-md bg-transparent">
         <img 
           src={coinImg} 
-          alt="Old 1 Rupee Coin" 
-          className="w-full h-full object-cover scale-[1.5]"
+          alt="King George V Silver Coin" 
+          className="w-full h-full object-contain"
         />
       </div>
 
-      {/* Note Image - No background/border, Further zoomed and slimmed to hide image background */}
-      <div className="w-48 h-26 mb-6 rounded-sm overflow-hidden flex items-center justify-center">
-         <img 
+      {/* Note Image - Reserve Bank of India 10 Rupee Note from Screenshot */}
+      <div className="w-64 sm:w-72 max-w-[92vw] mb-6 rounded-md overflow-hidden shadow-md flex items-center justify-center border border-rose-200/60 bg-transparent">
+        <img 
           src={noteImg} 
-          alt="Old 10 Rupee Note" 
-          className="w-full h-full object-cover scale-[1.8]"
+          alt="Reserve Bank of India 10 Rupee Banknote" 
+          className="w-full h-auto object-contain"
         />
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+      <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0f172a] mb-8 text-center tracking-tight">
         Coin Selling and Buying
       </h1>
       <div className="w-full max-w-xs mb-6 relative">

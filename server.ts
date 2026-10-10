@@ -231,6 +231,26 @@ async function startServer() {
 
   app.use(express.json({ limit: '50mb' }));
   
+  app.get(["/manifest.webmanifest", "/manifest.json"], (req, res) => {
+    res.type("application/manifest+json");
+    res.sendFile(path.join(process.cwd(), "public", "manifest.webmanifest"));
+  });
+
+  app.get("/icon-192.png", (req, res) => {
+    res.type("image/png");
+    res.sendFile(path.join(process.cwd(), "public", "icon-192.png"));
+  });
+
+  app.get("/icon-512.png", (req, res) => {
+    res.type("image/png");
+    res.sendFile(path.join(process.cwd(), "public", "icon-512.png"));
+  });
+
+  app.get("/icon-maskable-512.png", (req, res) => {
+    res.type("image/png");
+    res.sendFile(path.join(process.cwd(), "public", "icon-maskable-512.png"));
+  });
+
   app.get("/api/health", (req, res) => { res.json({ status: "ok" }); });
   app.get("/api/messages", (req, res) => { res.json(store.messages); });
   app.post("/api/messages", (req, res) => {
