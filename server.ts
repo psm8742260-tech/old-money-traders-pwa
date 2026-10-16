@@ -364,6 +364,11 @@ Provide a professional, courteous, and accurate reply in ${languageName} answeri
     res.status(400).json({ error: "Invalid updates format" });
   });
 
+  app.get("/coins-production-build.zip", (req, res) => {
+    const zipPath = path.join(process.cwd(), "coins-production-build.zip");
+    res.download(zipPath, "coins-production-build.zip");
+  });
+
   app.post("/api/coin-rates/reset", (req, res) => {
     store.coinRates = [...initialCoinRates];
     res.json({ success: true, coinRates: store.coinRates });
